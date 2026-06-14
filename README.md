@@ -1,26 +1,23 @@
-# Rivals Stats
+# Rivals Scout
 
-Marvel Rivals Scout — a mobile-first web app that captures a loading screen photo, runs browser OCR to detect player usernames, and looks up stats via the Marvel Rivals API.
+Hero shooter scout tool — look up recent ranked stats, hero usage, and team lobby analysis via the Marvel Rivals API.
 
-## Proof of Concept (Phases 1–6)
+## Features
 
-- Next.js App Router with TypeScript and Tailwind CSS
-- shadcn/ui components
-- Browser camera capture (rear camera preferred)
-- Tesseract.js OCR in the browser
-- Username extraction from raw OCR output
-- Marvel Rivals API lookup via Next.js API route
+- Manual username input (single player or team lobby)
+- Recent ranked player profiles: rank, role, KDA, win rate, top heroes
+- Team lobby analysis: roster summary, strongest/weakest by MVP rate
 
 ## Getting Started
 
-```bash
+```powershell
 npm install
-cp .env.example .env.local
+Copy-Item .env.example .env.local
 # Add your MARVEL_RIVALS_API_KEY to .env.local
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) on a mobile device or desktop with a camera.
+Open [http://localhost:3000](http://localhost:3000).
 
 ## Environment Variables
 
@@ -28,10 +25,51 @@ Open [http://localhost:3000](http://localhost:3000) on a mobile device or deskto
 |----------|-------------|
 | `MARVEL_RIVALS_API_KEY` | API key from [MarvelRivalsAPI.com](https://marvelrivalsapi.com) |
 
-## Deployment
+## Deployment (Vercel)
 
-Deploy to Vercel and set `MARVEL_RIVALS_API_KEY` in project environment variables.
+Same flow as [FFootball Archive](https://github.com/stoffelnathan/FFootball-Archive): GitHub → Vercel, with secrets in project env vars.
 
-## Status
+### 1. Push code to GitHub
 
-Proof of concept complete. OCR correction, lobby reports, caching, and accounts are planned for future phases.
+Repo: [github.com/stoffelnathan/Rivals_Stats](https://github.com/stoffelnathan/Rivals_Stats)
+
+```powershell
+git push origin main
+```
+
+### 2. Deploy on Vercel
+
+1. Go to [vercel.com/new](https://vercel.com/new) and import **Rivals_Stats**
+2. Set the project name to **`rivals-scout`** (URL: `https://rivals-scout.vercel.app`)
+3. Framework preset: **Next.js** (auto-detected)
+4. Add environment variable:
+
+| Variable | Value |
+|----------|--------|
+| `MARVEL_RIVALS_API_KEY` | Your key from MarvelRivalsAPI.com |
+
+5. Deploy
+
+### 3. Verify
+
+Open `https://rivals-scout.vercel.app`, enter a username, and confirm stats load.
+
+### Making changes after deploy
+
+- **Code/UI changes:** push to `main` on GitHub → Vercel redeploys automatically
+- **API key rotation:** update `MARVEL_RIVALS_API_KEY` in Vercel → Settings → Environment Variables, then redeploy
+
+### CLI deploy (optional)
+
+```powershell
+npx vercel link --project rivals-scout
+npx vercel env add MARVEL_RIVALS_API_KEY
+npx vercel --prod
+```
+
+### Local production build test
+
+```powershell
+npm run build
+npm run start
+```
